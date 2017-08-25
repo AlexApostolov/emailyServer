@@ -36,24 +36,24 @@ passport.use(
       // Allow Heroku to use a proxy with the callback URL so https works, otherwise Google will incorrectly assume http
       proxy: true
     },
-    (accessToken, refreshToken, profile, done) => {
-      // Use the "User" model class to search over all the records inside a collection. A query can't be simply saved in a variable, but it returns a promise.
+    // Instead of using older Promise syntax, use await/async for cleaner code
+    async (accessToken, refreshToken, profile, done) => {
+      // Use the "User" model class to search over all the records inside a collection.
       // Only if there's no matching Google ID already, create it.
-      User.findOne({ googleId: profile.id }).then(existingUser => {
-        if (existingUser) {
-          // We already have a record with the given profile ID
-          // Tell Passport we are done. Pass a 1st argument for error handling--here null will suffice, then 2nd arg of user record
-          done(null, existingUser);
-        } else {
-          // Promise returned "null". We don't have a user record with this ID, make a new record!
-          // Create a new model instance, i.e. record, of "User", and then persist it--doesn't otherwise save automatically in the DB
-          // NOTE: "new" + "save()" is equivalent to "User.create". Also, this is async so we need to use a Promise after for done()
-          // It is best practice to use the freshest data, so instead of the newly saved, we use what was then returned as "user"
-          new User({ googleId: profile.id })
-            .save()
-            .then(user => done(null, user));
-        }
-      });
+      const existingUser = await User.findOne({ googleId: profile.id });
+
+      if (existingUser) {
+        // We already have a record with the given profile ID
+        // Using the "return" allows us to skip an "else" statement
+        // Tell Passport we are done. Pass a 1st argument for error handling--here null will suffice, then 2nd arg of user record
+        return done(null, existingUser);
+      }
+      // Promise returned "null". We don't have a user record with this ID, make a new record!
+      // Create a new model instance, i.e. record, of "User", and then persist it--doesn't otherwise save automatically in the DB
+      // NOTE: "new" + "save()" is equivalent to "User.create".
+      // It is best practice to use the freshest data, so instead of the newly saved, we use what was then returned as "user"
+      const user = await new User({ googleId: profile.id }).save();
+      done(null, user);
     }
   )
 );
