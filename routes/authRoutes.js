@@ -8,7 +8,8 @@ module.exports = app => {
     '/auth/google',
     passport.authenticate('google', {
       // User grants permission to access user's profile and email address
-      scope: ['profile', 'email']
+      scope: ['profile', 'email'],
+      prompt: 'select_account'
     })
   );
 
