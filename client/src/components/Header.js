@@ -22,11 +22,10 @@ class Header extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <nav>
         <div className="nav-wrapper">
-          <a href="" class="left brand-logo">
+          <a href="" className="left brand-logo">
             Emaily
           </a>
           <ul className="right">{this.renderContent()}</ul>
