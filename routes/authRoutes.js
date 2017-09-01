@@ -13,14 +13,21 @@ module.exports = app => {
   );
 
   // Route handler exchanges the "code" from Google URL into an actual profile instead of kicking user into OAuth flow.
-  app.get('/auth/google/callback', passport.authenticate('google'));
+  app.get(
+    '/auth/google/callback',
+    passport.authenticate('google'),
+    (req, res) => {
+      res.redirect('/surveys');
+    }
+  );
 
   // Logout logic
   app.get('/api/logout', (req, res) => {
     // Passport automatically attaches functions to the "req" object to manipulate the user's authentication status such as "logout()",
     // which takes the cookie and kills the id that's in there
     req.logout();
-    res.send(req.user);
+    // Redirect user to the root route
+    res.redirect('/');
   });
 
   // Add user model instance to req object as "req.user"
