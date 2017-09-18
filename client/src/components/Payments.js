@@ -1,6 +1,8 @@
 // Wrap Stripe checkout and pass it configs
 import React, { Component } from 'react';
 import StripeCheckout from 'react-stripe-checkout';
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 class Payments extends Component {
   render() {
@@ -11,7 +13,7 @@ class Payments extends Component {
         description="$5 for 5 email credits"
         amount={500}
         /* "onToken" would've been a better name here, because token is actually a callback after retrieving a Stripe API token */
-        token={token => console.log(token)}
+        token={token => this.props.handleToken(token)}
         stripeKey={process.env.REACT_APP_STRIPE_KEY}
       >
         {/* Instead of default Stripe button, use your own */}
@@ -21,4 +23,5 @@ class Payments extends Component {
   }
 }
 
-export default Payments;
+// Only care about the action creators, so null for mapStateToProps
+export default connect(null, actions)(Payments);

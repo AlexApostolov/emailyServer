@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 // Model needs to be declared before passport tries to use it
 require('./models/User');
@@ -13,7 +14,8 @@ mongoose.connect(keys.mongoURI);
 const app = express();
 
 // MIDDLEWARES for preprocessing of incoming requests before send off to route handlers
-
+// Tell Express it needs to parse body of any request, which it will then assign the contents to req.body property
+app.use(bodyParser.json());
 // Tell Express it needs to make use of cookies inside of application
 app.use(
   cookieSession({
@@ -28,8 +30,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// authRoutes is a function that's Immediately called with your app object and attaches the routes to it.
+// authRoutes is a function that's immediately called with your app object and attaches the routes to it.
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
