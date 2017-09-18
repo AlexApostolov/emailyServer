@@ -30,9 +30,24 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// FIRST TRY
 // authRoutes is a function that's immediately called with your app object and attaches the routes to it.
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+
+// Ensure Express behaves correctly when run in the production environment
+if (process.env.NODE_ENV === 'production') {
+  // SECOND TRY
+  // Express will serve up production assets like main.js and main.css
+  // If Express does not recognize the specific file, look to the client side location
+  app.use(express.static('client/build'));
+  //THIRD TRY
+  // Express will serve up the index.html file if it doesn't recognize the route
+  const path = require('path');
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
