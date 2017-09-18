@@ -12,8 +12,7 @@
     "server": "nodemon index.js",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild":
-      "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "Alexander Apostolov",
   "license": "ISC",
@@ -29,7 +28,9 @@
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",
     "path-parser": "^2.0.2",
+    "react-scripts": "^1.0.13",
     "sendgrid": "^5.2.2",
     "stripe": "^5.0.0"
-  }
+  },
+  "devDependencies": {}
 }
