@@ -32,9 +32,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // FIRST TRY
-// authRoutes is a function that's immediately called with your app object and attaches the routes to it.
+// authRoutes... is a function that's immediately called with your app object and attaches the routes to it.
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 // Ensure Express behaves correctly when run in the production environment
 if (process.env.NODE_ENV === 'production') {
