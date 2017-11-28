@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
+const Mailer = require('../services/Mailer');
+const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 
 // Workaround for testing framework, so mongoose doesn't complain about requiring in the same model file multiple times
 const Survey = mongoose.model('Survey');
@@ -25,5 +27,11 @@ module.exports = app => {
       _user: req.user.id,
       dateSent: Date.now()
     });
+
+    // Send email with a template that is passed the survey model
+    // 1st arg is object with "subject" & "recipients", 2nd arg is the HTML body to use inside the email
+    const mailer = new Mailer(survey, surveyTemplate(survey));
+    // Test out mailer
+    mailer.send();
   });
 };

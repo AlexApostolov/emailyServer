@@ -8,6 +8,10 @@ import reduxThunk from 'redux-thunk';
 
 import App from './components/App';
 import reducers from './reducers';
+// Temporary test code for mailer
+import axios from 'axios';
+window.axios = axios;
+// End test code
 
 // 1st arg is the reducer(s), 2nd arg is initial state used when doing SSR, 3rd arg is middleware such as redux-thunk
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));

@@ -7,10 +7,14 @@ const surveySchema = new Schema({
   title: String,
   body: String,
   subject: String,
-  recipients: [RecipientSchema], // Rather than an array of String, list of records conforming to RecipientSchema
+  // Rather than an array of String, list of records conforming to RecipientSchema
+  recipients: [RecipientSchema],
+  // Multiple clicks will simply toggle boolean
   yes: { type: Number, default: 0 },
   no: { type: Number, default: 0 },
-  _user: { type: Schema.Types.ObjectId, ref: 'User' }, // Set up a relationship to know which survey belongs to which individual user, underscore tells developers this is a reference field--not containing raw data
+  /* Set up a relationship to know which survey belongs to which individual user.
+  Underscore tells developers this is a reference field--not containing raw data */
+  _user: { type: Schema.Types.ObjectId, ref: 'User' },
   dateSent: Date,
   lastResponded: Date
 });

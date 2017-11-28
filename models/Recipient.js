@@ -7,6 +7,6 @@ const recipientSchema = new Schema({
   responded: { type: Boolean, default: false }
 });
 
-// Rather than registering this Schema with mongoose, export the Schema,
-// which will need to be imported into Survey.js and associate it with the Survey model
+/* Rather than registering this Schema with mongoose, export the Schema,
+which will need to be imported into Survey.js and associate it with the Survey model */
 module.exports = recipientSchema;
