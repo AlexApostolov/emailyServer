@@ -8,8 +8,12 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 const Survey = mongoose.model('Survey');
 
 module.exports = app => {
+  app.get('/api/surveys/thanks', (req, res) => {
+    res.send('Thanks for voting!');
+  });
+
   // Must be logged in and have credits to send a survey
-  app.post('/api/surveys', requireLogin, requireCredits, (req, res) => {
+  app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
     // Create an instance of a new survey
     const { title, subject, body, recipients } = req.body;
     // Create an instance of Survey with properties from body
@@ -31,7 +35,17 @@ module.exports = app => {
     // Send email with a template that is passed the survey model
     // 1st arg is object with "subject" & "recipients", 2nd arg is the HTML body to use inside the email
     const mailer = new Mailer(survey, surveyTemplate(survey));
-    // Test out mailer
-    mailer.send();
+
+    try {
+      await mailer.send();
+      await survey.save();
+      req.user.credits -= 1;
+      // Once user has been saved, user is "stale", so we use it from here on as a saved variable
+      const user = await req.user.save();
+      // Send back the new value of credits
+      res.send(user);
+    } catch (err) {
+      res.status(422).send(err);
+    }
   });
 };
